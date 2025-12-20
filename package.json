@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
+        "@tanstack/react-query": "^5.90.12",
         "@types/node": "^25.0.3",
         "framer-motion": "^12.23.26",
         "react": "^19.1.0",
@@ -19,7 +20,7 @@
         "react-icons": "^5.5.0",
         "react-router-dom": "^7.6.3",
         "salesive-api-axios": "^0.0.4",
-        "salesive-dev-tools": "0.0.5",
+        "salesive-dev-tools": "^0.0.5",
         "salesive-react-starter-template": ".",
         "tailwindcss": "^4.1.17",
         "vite": "^7.2.4"
