@@ -3,13 +3,14 @@ import { Outlet } from 'react-router-dom'
 import Navbar from '../component/Navbar'
 import Footer from '../component/Footer'
 import MobileNav from '../component/MobileNav'
-import { createGhostUser } from '../api/authUser'
+import { useCreateGhostUser } from '@/hooks/auth-hook'
 
 const Root = () => {
+  const createGhostHandler = useCreateGhostUser();
   useEffect(() => {
     const createUser = async () => {
       try {
-        await createGhostUser();
+        await createGhostHandler.mutateAsync();
       } catch (err) {
         console.error(err);
       }
@@ -20,14 +21,14 @@ const Root = () => {
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <MobileNav />
       <div className="px-6 md:px-16 lg:px-32">
-        <Outlet/>
+        <Outlet />
       </div>
       <Footer />
     </>
-    
+
   )
 }
 
