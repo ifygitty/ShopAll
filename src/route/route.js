@@ -1,54 +1,25 @@
-import { createBrowserRouter as Router } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import Product from "../page/product/ProductDetails";
 
-import Home from "../page/home/Home";
 import Root from "../page/Root";
+import Home from "../page/home/Home";
 
 
-const router = Router([
-    {
-        path: "/",
-        Component: Root,
-        children: [
-            {
-                index: true,
-                Component: Home
-            },
-            // {
-            //     path: "about",
-            //     Component: AboutUsRoute
-            // },
-            // {
-            //     path: "shop",
-            //     Component: ShopRoute
-            // },
-            // {
-            //     path: "blog",
-            //     Component: BlogPage
-            // },
-            // {
-            //     path: "/product-detail/:id",
-            //     Component: ProductDetailRoute
-            // },
-            // {
-            //     path: "cart",
-            //     Component: CartRoute,
-            //     children: [
-            //         {
-            //           index: true, 
-            //           Component: ShoppingCart,
-            //         },
-            //         {
-            //           path: "checkout", 
-            //           Component: CheckoutDetails,
-            //         },
-            //         {
-            //           path: "order", 
-            //           Component: Order,
-            //         },
-            //     ],
-            // }
-        ]
-    }
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Root,
+    children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "product/:id",
+        Component: Product,
+      },
+    ],
+  },
 ]);
 
 export default router;

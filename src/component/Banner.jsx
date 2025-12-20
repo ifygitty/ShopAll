@@ -53,11 +53,11 @@ const Banner = () => {
                 
             <div className="md:pl-8 mt-10 md:mt-0">
               <p className="md:text-base text-blue-600 pb-1">{slide.offer}</p>
-              <h1 className="max-w-lg md:text-[30px] md:leading[48px] lg:text-[35px] text-2xl font-semibold">
+              <h1 className="max-w-lg md:text-[30px] md:leading[48px] lg:text-[35px] text-2xl font-semibold max-sm:text-xl">
                 {slide.title}
               </h1>
               <div className="flex items-center mt-4 md:mt-6 ">
-                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-blue-600 rounded-full text-white font-medium">
+                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-blue-600 rounded-full text-white font-medium max-sm:text-sm max-sm:px-5">
                   {slide.buttonText1}
                   
                 </button>

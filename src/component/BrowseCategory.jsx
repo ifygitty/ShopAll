@@ -10,7 +10,7 @@ const BrowseCategory = () => {
   return (
     <div className='mt-10 f'> 
         <p className='font-template-lora text-2xl font-medium mb-5'>Browse by Category</p>
-        <div className='grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 w-full font-template-badoni'>
+        <div className='grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 w-full font-template-badoni max-sm:gap-3'>
             {category.map(category => (
     ( category.img.startsWith('/image/perfumes') || category.img.startsWith('/image/clothes'))  ? (
         <div className='w-full relative h-62 bg-template-whitesmoke overflow-hidden group rounded-lg'>
@@ -23,14 +23,14 @@ const BrowseCategory = () => {
             </div>
         </div>
     ) : (
-        <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-62 flex items-center justify-center p-2">
+        <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-62 flex items-center justify-center overflow-hidden">
             <img
                 src={category.img}
                 className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
                 width={800}
                 height={800}
             />
-            <div className="absolute bottom-2 left-2  bg-white p-2 rounded-full shadow-md text-black text-sm">
+            <div className="absolute bottom-2 left-2  bg-white p-2 rounded-full shadow-md text-black text-sm ">
                 {category.title}
             </div>
         </div>
