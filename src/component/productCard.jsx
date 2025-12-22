@@ -1,65 +1,83 @@
-import React, { useState } from 'react'
-import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
-import { FaStar,FaRegStar, FaStarHalf, FaShoppingCart } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-const ProductsCard = ({product}) => {
-    const[currency, setCurrency] = useState("$")
+import React, { useState, useMemo } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FaStar, FaShoppingCart } from "react-icons/fa";
+import { RiShoppingCartLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
+import { useAddToCart, useCartItems } from "@/query/queryCart";
+
+const ProductsCard = ({ product }) => {
+  const [currency] = useState("$");
+
+  const { data: cartResponse } = useCartItems();
+  const { mutate: addToCart, isPending } = useAddToCart();
+
+  const cartItems = Array.isArray(cartResponse?.data?.items)
+  ? cartResponse.data.items
+  : [];
+
+  console.log(cartItems)
+
+
+  const isInCart = useMemo(() => {
+  return cartItems.some(
+    (item) => item.product?._id === product._id
+  );
+}, [cartItems, product._id]);
+
+
+  const handleAddToCart = () => {
+    addToCart({
+  productId: product._id,
+  quantity: 2,
+});
+  };
+
   return (
-   
-     <div
-            className="flex flex-col items-start gap-0.5 max-w-[250px] w-full "
-        >
-            <Link to={`/product/${product.id}`} className='w-full'>
-             {product.image.startsWith('/image/perfumes')?(
-                <div className='w-full relative h-52 bg-template-whitesmoke overflow-hidden group rounded-lg'>
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover object-[50%_20%] hover:scale-105 transition-all duration-400 ease-in-out group-hover:scale-105 group-active:scale-105 group-active:duration-150 touch-manipulation rounded-lg" />
-                <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                    <AiOutlineHeart/>
-                </button>
-                </div>
-            ): (
-                <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center overflow-hidden">
-                    <img
-                    src={product.image}
-                    alt={product.name}
-                    className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
-                    width={800}
-                    height={800}
-                />
-                <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                    <AiOutlineHeart/>
-                </button>
-                </div>
-                
-            )}
-            </Link>
-            
-            <p className="md:text-base font-medium pt-2 w-full truncate">{product.name}</p>
-            <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">{product.description}</p>
-            <div className="flex items-center gap-2">
-                <p className="text-xs">{4.5}</p>
-                <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                        <FaStar className={
-      index < 4
-        ? "text-orange-600"   // filled star
-        : "text-gray-300"     // dull/empty looking star
-    } key={index}/>
-                    ))}
-                </div>
-            </div>
-
-            <div className="flex items-end justify-between w-full mt-1">
-                <p className="text-base font-medium">{currency}{product.offerPrice}</p>
-                <button className=" text-xl px-4 py-1.5 text-gray-500   hover:bg-slate-50 transition">
-                    <FaShoppingCart />
-                </button>
-            </div>
+    <div className="flex flex-col items-start gap-0.5 max-w-[250px] w-full">
+      <Link to={`/product/${product._id}`} className="w-full">
+        <div className="relative h-52 bg-gray-100 overflow-hidden rounded-lg">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover hover:scale-105 transition"
+          />
+          <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow">
+            <AiOutlineHeart />
+          </button>
         </div>
-    
-    
-    )
+      </Link>
 
-}
+      <p className="font-medium pt-2 truncate w-full">{product.name}</p>
 
-export default ProductsCard
+      <div className="flex items-center gap-0.5 text-sm">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <FaStar
+            key={i}
+            className={i < 4 ? "text-orange-600/60" : "text-gray-300"}
+          />
+        ))}
+      </div>
+
+      <div className="flex items-end justify-between w-full mt-1">
+        <p className="text-base font-medium">
+          {currency}
+          {product.price}
+        </p>
+
+        <button
+          onClick={handleAddToCart}
+          disabled={isPending}
+          className="text-xl px-4 py-1.5 transition hover:bg-slate-50"
+        >
+          {isInCart ? (
+            <FaShoppingCart className="text-blue-600/70" />
+          ) : (
+            <RiShoppingCartLine className="text-gray-500" />
+           )} 
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ProductsCard;

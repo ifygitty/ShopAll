@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {  FaShoppingCart, FaHome, FaInfoCircle, FaPhone, FaShoppingBasket } from 'react-icons/fa'
 import { Link } from "react-router-dom";
+import CartItems from "./CartItems";
 
 
 const MobileNav = () => {
@@ -29,7 +30,7 @@ const MobileNav = () => {
 
         <p className='font-medium text-2xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</p> 
         <div className="flex justify-between items-center gap-5">
-            <FaShoppingCart className="text-blue-600" />
+            <CartItems />
             <button
         onClick={() => setOpen(true)}
         className="p-2 focus:outline-none"
@@ -59,7 +60,7 @@ const MobileNav = () => {
             
             <motion.div
               ref={navRef}
-              className="fixed top-0 right-0 w-2/4 h-full bg-white shadow-lg p-6"
+              className="fixed top-0 right-0 w-2/4 h-full bg-white shadow-lg p-6 z-50"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
