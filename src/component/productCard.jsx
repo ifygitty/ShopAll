@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { FaStar, FaShoppingCart } from "react-icons/fa";
@@ -12,24 +13,36 @@ const ProductsCard = ({ product }) => {
   const { mutate: addToCart, isPending } = useAddToCart();
 
   const cartItems = Array.isArray(cartResponse?.data?.items)
-  ? cartResponse.data.items
-  : [];
-
-  console.log(cartItems)
-
+    ? cartResponse.data.items
+    : [];
+console.log(cartItems)
 
   const isInCart = useMemo(() => {
-  return cartItems.some(
-    (item) => item.product?._id === product._id
-  );
-}, [cartItems, product._id]);
-
+    return cartItems.some(
+      (item) => item.product?._id === product._id
+    );
+  }, [cartItems, product._id]);
 
   const handleAddToCart = () => {
+    let variantId = undefined;
+
+ 
+    if (product.hasVariants && Array.isArray(product.variants)) {
+      const defaultVariant = product.variants[0];
+
+      if (!defaultVariant || !defaultVariant.id) {
+        console.error("No valid variant found");
+        return;
+      }
+
+      variantId = defaultVariant.id;
+    }
+
     addToCart({
-  productId: product._id,
-  quantity: 2,
-});
+      productId: product._id,
+      quantity: 1,
+      variantId,
+    });
   };
 
   return (
@@ -73,7 +86,7 @@ const ProductsCard = ({ product }) => {
             <FaShoppingCart className="text-blue-600/70" />
           ) : (
             <RiShoppingCartLine className="text-gray-500" />
-           )} 
+          )}
         </button>
       </div>
     </div>
@@ -81,3 +94,4 @@ const ProductsCard = ({ product }) => {
 };
 
 export default ProductsCard;
+

@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { addToCart, deleteCartItem, getCartItems, deletAllCartItems } from "@/api/cart";
+import { addToCart, deleteCartItem, getCartItems, deletAllCartItems, updateCartItemQuantity } from "@/api/cart";
 
- 
 
 export const useAddToCart = () => {
-const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ productId, quantity }) =>
-      addToCart({ productId, quantity }),
+    mutationFn: ({ productId, quantity, variantId }) =>
+      addToCart({ productId, quantity, variantId }),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart-items"] });
@@ -17,7 +17,7 @@ const queryClient = useQueryClient();
     onError: (error) => {
       console.error(
         "Add to cart failed:",
-        error.response?.data || error.message
+        error?.response?.data || error.message
       );
     },
   });
@@ -64,3 +64,25 @@ export const useClearCartItem = () => {
     },
  })
 }
+
+
+export const useUpdateCartItemQuantity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ productId, quantity }) =>
+      updateCartItemQuantity({ productId, quantity }),
+
+    onSuccess: () => {
+
+      queryClient.invalidateQueries({ queryKey: ["cart-items"] });
+    },
+
+    onError: (error) => {
+      console.error(
+        "Update cart quantity failed:",
+        error.response?.data || error.message
+      );
+    },
+  });
+};
