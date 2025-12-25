@@ -131,7 +131,7 @@ const CartItems = () => {
 
             <motion.div
               ref={navRef}
-              className={`fixed top-0 right-0 h-full w-2/4 max-md:w-3/4 bg-white shadow-lg p-4 flex flex-col ${
+              className={`fixed top-0 right-0 h-full w-2/4 max-md:w-3/4 max-sm:w-full bg-white shadow-lg p-4 flex flex-col ${
                 isClearing ? "pointer-events-none opacity-60" : ""
               }`}
               initial={{ x: "100%" }}
