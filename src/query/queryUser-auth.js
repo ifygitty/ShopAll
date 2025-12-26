@@ -1,4 +1,5 @@
-import { createGhostUser } from "@/api/authUser";
+// import { createGhostUser, checkEmailExists, useCheckEmail, verifyUserEmail,  resendOtp, verifyOtp } from "@/api/authUser";
+import { createGhostUser, checkEmailExists, sendAuthOtp, resendOtp, verifyOtp } from "@/api/authUser";
 import { useMutation } from "@tanstack/react-query";
 
 
@@ -16,3 +17,25 @@ export const useCreateGhostUser = () => {
     }
   });
 };
+
+
+
+export const useCheckEmail = () =>
+  useMutation({
+    mutationFn: (email) => checkEmailExists(email),
+  });
+
+export const useSendOtp = () =>
+  useMutation({
+    mutationFn: sendAuthOtp,
+  });
+
+export const useVerifyOtp = () =>
+  useMutation({
+    mutationFn: verifyOtp,
+  });
+
+export const useResendOtp = () =>
+  useMutation({
+    mutationFn: (email) => resendOtp(email),
+  });

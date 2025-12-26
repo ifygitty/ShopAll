@@ -3,6 +3,7 @@
 import { Link } from 'react-router-dom';
 import { FaStar,FaRegStar, FaStarHalf, FaShoppingCart } from 'react-icons/fa'
 import CartItems from './CartItems';
+import { RiUserLine } from 'react-icons/ri';
 
 
 const Navbar = () => {
@@ -23,9 +24,16 @@ const Navbar = () => {
        
 
         </div> 
-
-       
+          
+          <div className='flex items-center gap-5 '>
+            <Link to={"/login"}>
+             <RiUserLine className="hover:cursor-pointer text-2xl"/>
+            </Link>
+             
           <CartItems />
+          </div>
+          
+
 
        
 

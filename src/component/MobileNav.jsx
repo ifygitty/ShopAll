@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {  FaShoppingCart, FaHome, FaInfoCircle, FaPhone, FaShoppingBasket } from 'react-icons/fa'
 import { Link } from "react-router-dom";
 import CartItems from "./CartItems";
+import { RiUserLine } from "react-icons/ri";
 
 
 const MobileNav = () => {
@@ -30,7 +31,13 @@ const MobileNav = () => {
 
         <p className='font-medium text-2xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</p> 
         <div className="flex justify-between items-center gap-5">
-            <CartItems />
+           <div className='flex items-center gap-5 '>
+             <Link to={"/login"}>
+               <RiUserLine className="hover:cursor-pointer text-2xl"/>
+             </Link>
+                        
+                     <CartItems />
+                     </div>
             <button
         onClick={() => setOpen(true)}
         className="p-2 focus:outline-none"

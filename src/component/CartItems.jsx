@@ -45,6 +45,7 @@ const CartItems = () => {
   const cartItems = Array.isArray(cartResponse?.data?.items)
     ? cartResponse.data.items
     : [];
+    console.log(cartItems)
 
   const totalQuantity = cartItems.reduce(
     (acc, item) => acc + item.quantity,
@@ -107,13 +108,13 @@ const CartItems = () => {
 
   return (
     <div className="relative z-30">
-       <div className="flex items-center gap-5 text-2xl">
-         <RiUserLine className="hover:cursor-pointer"/>
+       <div className="">
+        
         <button
        onClick={() => setOpen(true)}
        className="flex items-center gap-2 px-1 py-3 relative"
      >
-       <RiShoppingCartLine className="" />
+       <RiShoppingCartLine className="text-2xl" />
        <span className="absolute top-0 right-1 text-sm font-medium">
         {totalQuantity}
        </span>
@@ -140,7 +141,7 @@ const CartItems = () => {
             >
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold">Cart ({totalQuantity})</h2>
-                <button onClick={() => setOpen(false)}>
+                <button className="w-fit text-center rounded-full p-1 shadow-lg bg-white text-2xl  text-gray-500" onClick={() => setOpen(false)}>
                   <RiCloseLine size={22} />
                 </button>
               </div>
@@ -196,7 +197,7 @@ const CartItems = () => {
                       </div>
 
                       <div className="flex flex-col items-end justify-between">
-                        <button
+                        <button className="ml-auto border border-gray-400 rounded-full p-1.5 hover:bg-gray-400/10"
                           onClick={(e) =>
                             removeItem(e, item.product._id)
                           }
@@ -207,6 +208,32 @@ const CartItems = () => {
                         <p>${item.product.price}</p>
                       </div>
                     </div>
+                     {item.variantAttributes && (
+                    <div className="flex flex-wrap gap-2 mt-3 px-2">
+                      {Object.entries(item.variantAttributes).map(([rawKey, rawValue]) => {
+                        const key = rawKey.toLowerCase();
+                        const value = String(rawValue).toLowerCase();
+
+                        const isColour = key === "colour";
+
+                        return (
+                          <span
+                            key={rawKey}
+                            className={`
+                              text-sm font-medium px-2 py-1 rounded-full
+                              ${
+                                isColour
+                                  ? `bg-${value}-500/30 text-${value}-700`
+                                  : "bg-blue-500/30 text-blue-700"
+                                }
+                              `}
+                            >
+                              {key}: {value}
+                            </span>
+                          );
+                        })}
+                    </div>
+                  )}
                   </motion.div>
                 ))}
               </motion.div>
@@ -236,6 +263,8 @@ const CartItems = () => {
                   </div>
                 )}
               </div>
+
+              
             </motion.div>
           </>
         )}

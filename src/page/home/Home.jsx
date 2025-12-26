@@ -10,7 +10,9 @@ import { useGetListProducts } from "@/query/queryProducts";
 const Home = () => {
   const { data, isLoading, isError, error } = useGetListProducts();
 
+
   const products = data?.data?.data?.products ?? [];
+  console.log(products)
 
   return (
     <>

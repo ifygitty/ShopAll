@@ -3,6 +3,7 @@ import Product from "../page/product/ProductDetails";
 
 import Root from "../page/Root";
 import Home from "../page/home/Home";
+import AuthModal from "@/component/auth/AuthModal";
 
 
 const router = createBrowserRouter([
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "product/:id",
         Component: Product,
+      },
+      {
+        path: "login",
+        Component: AuthModal,
       },
     ],
   },
