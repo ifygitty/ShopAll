@@ -27,9 +27,9 @@ const MobileNav = () => {
   }, [open]);
 
   return (
-    <div className="relative z-50 md:hidden flex justify-between items-center px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700">
+    <div className=" w-full top-0 fixed z-50 md:hidden flex justify-between items-center px-6 md:px-16 lg:px-32 py-3 border-b bg-white border-gray-300 text-gray-700">
 
-        <p className='font-medium text-2xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</p> 
+        <Link to={'/'} className='font-medium text-2xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</Link> 
         <div className="flex justify-between items-center gap-5">
            <div className='flex items-center gap-5 '>
              <Link to={"/login"}>

@@ -49,9 +49,9 @@ const ProductsCard = ({ product }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 max-w-[250px] w-full">
+    <div className="flex flex-col  max-w-[250px] w-full">
       <Link to={`/product/${product._id}`} className="w-full">
-        <div className="relative h-52 bg-gray-100 rounded-lg overflow-hidden">
+        <div className="relative h-52 bg-gray-100 rounded-lg overflow-hidden ">
           <img
             src={product.image}
             alt={product.name}
@@ -74,7 +74,7 @@ const ProductsCard = ({ product }) => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-1">
+      <div className="flex items-center justify-between">
         <p className="font-medium">{formatPrice(product.price)}</p>
 
         <button

@@ -23,7 +23,7 @@ const Root = () => {
     <>
       <Navbar />
       <MobileNav />
-      <div className="px-6 md:px-16 lg:px-32">
+      <div className="px-6 md:px-16 lg:px-32 max-sm:px-4 mt-15">
         <Outlet />
       </div>
       <Footer />

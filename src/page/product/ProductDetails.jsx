@@ -276,6 +276,7 @@ import {
 } from "@/query/queryCart";
 
 import FullPageLoader from "@/component/FullPageLoader";
+import { toast } from "sonner";
 
 const formatPrice = (amount) => {
   if (!amount && amount !== 0) return "₦0";
@@ -293,7 +294,7 @@ const Product = () => {
   const { data, isLoading } = useProductDetails(id);
   const { data: cartResponse } = useCartItems();
 
-  const { mutate: addToCart } = useAddToCart();
+  const { mutate: addToCart, isPending: isadding } = useAddToCart();
   const { mutate: updateQtyVariant } =
     useUpdateCartItemQuantityVariant();
 
@@ -432,15 +433,30 @@ const Product = () => {
       productId: product._id,
       variantId: selectedVariantId,
       quantity: qty,
-    });
+    },
+    {
+        onSuccess: () => {
+          toast.success("Item added to cart successfully");
+        },
+        onError: () => {
+          toast.error("Failed to add item to cart");
+        },
+    }
+  );
   };
 
   const getColorClasses = (color) => {
     if (color === "white")
       return "bg-gray-200 text-gray-400 border";
     if (color === "black") return "bg-black/60 text-white";
+    if (color === "blue") return "bg-blue-500/80 text-blue-700";
+    if (color === "gray") return "bg-gray-500/80 text-gray-700";
+    if (color === "yellow") return "bg-yellow-500/80 text-yellow-700";
     if (color === "brown")
       return "bg-variant-brown/80 text-white";
+    if (color === "red") return "bg-red-500/80 text-red-700";
+    if (color === "green") return "bg-green-500/80 text-green-700";
+    
     return `bg-${color}-500/80 text-${color}-700`;
   };
 
@@ -448,12 +464,15 @@ const Product = () => {
   if (!product) return null;
 
   return (
-    <div className=" pt-14 space-y-10">
+    <div className=" pt-10 space-y-10">
       <div className="grid md:grid-cols-2 gap-16">
-        <img
+        <div className=" flex justify-center h-100">
+          <img
           src={product.image}
-          className="rounded-lg bg-gray-100"
+          className="rounded-lg bg-gray-100 h-full"
         />
+        </div>
+        
 
         <div>
           <h1 className="text-3xl font-medium">
@@ -500,7 +519,7 @@ const Product = () => {
                 {[...groupedAttributes[key]].map((value) => {
                   const active =
                     selectedAttributes[key] === value;
-                  const isColor = key === "color";
+                  const isColor = key === "color" || "colour";
 
                   return (
                     <button
@@ -536,8 +555,9 @@ const Product = () => {
               {cartItem? <div className="absolute bg-amber-300/20 text-amber-600 p-1 w-fit top-2 right-2 text-xs">item is already in cart</div> : null}
              <div className={`${cartItem? "mt-4" : "mt-0"}`}>
                <div className={`w-fit flex items-center gap-1`}>Instock{variantDetails.inStock === true? <div className="bg-green-300/80 text-green-900 rounded-full p-1 text-sm"><FaCheck /></div>: <div className="bg-yellow-500/50 text-yellow-500"><RiErrorWarningFill /></div>}</div>
-            <div><span className="font-bold">product:</span> {variantDetails.sku}</div>
+            <div className="flex gap-3 items-center"><span className="font-bold">Product:</span> <p className="max-sm:text-sm">{variantDetails.sku}</p></div>
             <div><span className="font-bold">Weight:</span> {variantDetails.weight}</div>
+            <div> {variantDetails.quantity} available</div>
             <div className="mt-2 bg-green-300/80 text-green-900 w-fit p-2 font-medium rounded-2xl ">{formatPrice(variantDetails.price)}</div>
              </div>
            
@@ -564,9 +584,13 @@ const Product = () => {
             <button
               onClick={handleAddToCart}
               className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl max-sm:text-sm max-sm:px-3 "
+              disabled = {isadding}
             >
               <RiShoppingCartLine />
-              {cartItem ? "Update Cart" : "Add to Cart"}
+              
+              {cartItem ? <div>
+                {isadding? <div className="flex items-center gap-3"><span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> updating...</div> : "Update Cart"}
+              </div>: <div>{isadding? <div className="flex items-center gap-3"><span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> adding...</div> : "Add to Cart"}</div>}
             </button>
           </div>
         </div>
