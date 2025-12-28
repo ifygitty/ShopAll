@@ -8,7 +8,6 @@ const Banner = () => {
       title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
       offer: "Limited Time Offer 30% Off",
       buttonText1: "Buy now",
-      buttonText2: "Find more",
       imgSrc: "/image/accessories/header_headphone_image.png",
     },
     {
@@ -16,7 +15,6 @@ const Banner = () => {
       title: "Next-Level Outfits Starts Here - Discover more fashion you can ever imagine",
       offer: "Hurry up only few lefts!",
       buttonText1: "Shop Now",
-      buttonText2: "Explore Deals",
       imgSrc: "/image/clothes/img3.png",
     },
     {
@@ -24,7 +22,6 @@ const Banner = () => {
       title: "Power Meets Elegance - Incredible fragrance awaits you",
       offer: "Exclusive Deal 40% Off",
       buttonText1: "Order Now",
-      buttonText2: "Learn More",
       imgSrc: "/image/perfumes/image3.jpg",
     }
     ]
@@ -61,10 +58,7 @@ const Banner = () => {
                   {slide.buttonText1}
                   
                 </button>
-                <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
-                  {slide.buttonText2}
-                  
-                </button>
+                
               </div>
             </div>
             <div className="flex items-center justify-center">

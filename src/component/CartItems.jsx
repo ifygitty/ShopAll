@@ -331,6 +331,7 @@ import {
   RiCloseLine,
   RiAddLine,
   RiSubtractLine,
+  RiEyeLine,
 } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -548,9 +549,9 @@ const CartItems = () => {
                   <motion.div
                     key={`${item.product._id}`}
                     variants={itemVariants}
-                    className="shadow p-3 rounded"
+                    className="shadow p-3 rounded relative"
                   >
-                    <div className="flex justify-between">
+                    <div className="flex justify-between mb-5">
                       <div className="flex gap-3">
                         <img
                           src={item.image}
@@ -562,7 +563,7 @@ const CartItems = () => {
                             {item.product.name}
                           </p>
 
-                          <div className="flex items-center gap-3 mt-2 border rounded-full px-3 py-1">
+                          <div className="flex items-center gap-3 mt-2 border rounded-full px-3 py-1 w-fit">
                             <button
                               onClick={(e) => decreaseQty(e, item)}
                               disabled={item.quantity <= 1 || isUpdating}
@@ -593,12 +594,12 @@ const CartItems = () => {
                       </div>
                     </div>
                      {item.variantAttributes && (
-                    <div className="flex flex-wrap gap-2 mt-3 px-2">
+                    <div className="flex flex-wrap gap-2  px-2">
                       {Object.entries(item.variantAttributes).map(([rawKey, rawValue]) => {
                         const key = rawKey.toLowerCase();
                         const value = String(rawValue).toLowerCase();
 
-                        const isColour = key === "colour";
+                        const isColour = key === "colour" || "color";
 
                         return (
                           <span
@@ -616,8 +617,13 @@ const CartItems = () => {
                             </span>
                           );
                         })}
+                        
                     </div>
+                    
                   )}
+                  <Link onClick={() => setOpen(false)} to={`product/${item.product.id}`} className="absolute right-2 text-lg bottom-2">
+                          <RiEyeLine />
+                        </Link>
                   </motion.div>
                 ))}
               </motion.div>

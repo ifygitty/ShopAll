@@ -264,6 +264,7 @@ import {
   RiAddLine,
   RiSubtractLine,
   RiShoppingCartLine,
+  RiErrorWarningFill,
 } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
@@ -447,7 +448,7 @@ const Product = () => {
   if (!product) return null;
 
   return (
-    <div className="px-6 md:px-16 lg:px-32 pt-14 space-y-10">
+    <div className=" pt-14 space-y-10">
       <div className="grid md:grid-cols-2 gap-16">
         <img
           src={product.image}
@@ -530,11 +531,16 @@ const Product = () => {
           ))}
 
           {variantDetails?  
-          <div className="w-full shadow-2xl p-3 mt-5 font-template-badoni rounded-2xl space-y-2">
-            <div className="w-fit flex items-center gap-1">Instock{variantDetails.inStock === true? <div className="bg-green-300/80 text-green-900 rounded-full p-1 text-sm"><FaCheck /></div>: <div>less</div>}</div>
+          <div className="w-full shadow-2xl p-3 mt-5 font-template-badoni rounded-2xl space-y-2 relative">
+            
+              {cartItem? <div className="absolute bg-amber-300/20 text-amber-600 p-1 w-fit top-2 right-2 text-xs">item is already in cart</div> : null}
+             <div className={`${cartItem? "mt-4" : "mt-0"}`}>
+               <div className={`w-fit flex items-center gap-1`}>Instock{variantDetails.inStock === true? <div className="bg-green-300/80 text-green-900 rounded-full p-1 text-sm"><FaCheck /></div>: <div className="bg-yellow-500/50 text-yellow-500"><RiErrorWarningFill /></div>}</div>
             <div><span className="font-bold">product:</span> {variantDetails.sku}</div>
             <div><span className="font-bold">Weight:</span> {variantDetails.weight}</div>
             <div className="mt-2 bg-green-300/80 text-green-900 w-fit p-2 font-medium rounded-2xl ">{formatPrice(variantDetails.price)}</div>
+             </div>
+           
           </div> : null}
 
        
@@ -557,7 +563,7 @@ const Product = () => {
 
             <button
               onClick={handleAddToCart}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl"
+              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl max-sm:text-sm max-sm:px-3 "
             >
               <RiShoppingCartLine />
               {cartItem ? "Update Cart" : "Add to Cart"}
