@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useAddToCart, useCartItems } from "@/query/queryCart";
+import { formatPrice } from "@/utils/format";
 
 const ProductsCard = ({ product }) => {
   const { data: cartResponse } = useCartItems();
@@ -74,7 +75,7 @@ const ProductsCard = ({ product }) => {
       </div>
 
       <div className="flex items-center justify-between mt-1">
-        <p className="font-medium">${product.price}</p>
+        <p className="font-medium">{formatPrice(product.price)}</p>
 
         <button
           onClick={handleAddToCart}

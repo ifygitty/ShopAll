@@ -43,6 +43,18 @@ export const deleteCartItem = async ({productId}) => {
     }
 }
 
+export const deleteCartItemVariant = async ({productId, variantId}) => {
+    try {
+        const response = await cart.removeVariant(productId, variantId);
+        return response?.data;
+    }catch(err) {
+        if (err instanceof Error) {
+            throw new Error(err?.message || "Error occurred while trying to delete items in cart");
+        }
+        throw new Error("Unexpected error occurred while trying to delete items in cart");
+    }
+}
+
 export const deletAllCartItems = async () => {
     try {
         const response = await cart.clear();
@@ -70,11 +82,11 @@ export const updateCartItemQuantity = async ({productId, quantity}) => {
     }
 }
 
+
 export const updateCartItemVariant = async ({productId, variantId, quantity}) => {
     try {
-        const response = await cart.updateVariantQuantity(productId, variantId, {
-            quantity
-        });
+        console.log(variantId)
+        const response = await cart.updateVariantQuantity(productId, variantId, {quantity});
         return response?.data;
     }catch(err) {
         if (err instanceof Error) {
