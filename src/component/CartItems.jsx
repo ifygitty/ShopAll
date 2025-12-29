@@ -92,13 +92,27 @@ const CartItems = () => {
       productId: item.productId,
       variantId: item.variantId,
       quantity: item.quantity + 1,
-    });
+    },
+    {
+      onSuccess: () =>
+        toast.success("Cart item updated successfully"),
+      onError: () =>
+        toast.error("Failed to update cart item"),
+      }
+  );
   } else {
     
     updateQty({
       productId: item.productId,
       quantity: item.quantity + 1,
-    });
+    },
+    {
+      onSuccess: () =>
+        toast.success("Cart item updated successfully"),
+      onError: () =>
+        toast.error("Failed to update cart item"),
+      }
+  );
   }
 };
 
@@ -113,12 +127,26 @@ const CartItems = () => {
       productId: item.productId,
       variantId: item.variantId,
       quantity: item.quantity - 1,
-    });
+    },
+    {
+      onSuccess: () =>
+        toast.success("Cart item updated successfully"),
+      onError: () =>
+        toast.error("Failed to update cart item"),
+      }
+  );
   } else {
     updateQty({
       productId: item.productId,
       quantity: item.quantity - 1,
-    });
+    },
+    {
+      onSuccess: () =>
+        toast.success("Cart item updated successfully"),
+      onError: () =>
+        toast.error("Failed to update cart item"),
+      }
+  );
   }
 };
 
@@ -240,7 +268,11 @@ const CartItems = () => {
                               <RiSubtractLine />
                             </button>
 
-                            <span>{item.quantity}</span>
+                            
+                           
+
+
+                               <span>{item.quantity}</span>
 
                             <button
                               onClick={(e) => increaseQty(e, item)}
@@ -268,7 +300,10 @@ const CartItems = () => {
                         const key = rawKey.toLowerCase();
                         const value = String(rawValue).toLowerCase();
 
-                        const isColour = key === "colour" || "color";
+                        const isColour = key ===  "color";
+                        const colorbr = value === 'brown'
+                        const colorbl = value === 'black'
+                        const colorw = value === 'white'
 
                         return (
                           <span
@@ -279,6 +314,15 @@ const CartItems = () => {
                                 isColour
                                   ? `bg-${value}-500/30 text-${value}-700`
                                   : "bg-blue-500/30 text-blue-700"
+                                }
+                                ${
+                                  colorbr && "bg-variant-brown/30 text-variant-brown"
+                                }
+                                ${
+                                  colorbl && "bg-black/50 text-black"
+                                }
+                                ${
+                                  colorw && "bg-gray-200 text-gray-400 border"
                                 }
                               `}
                             >
