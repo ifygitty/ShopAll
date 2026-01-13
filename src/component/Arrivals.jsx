@@ -1,22 +1,23 @@
 import React from "react";
 import { arrivals } from "../products/arrivals";
 import ProductsCard from "./productCard";
+import ProductGrid from "./ProductCard1";
 
 
-const Arrivals = ({products}) => {
-
+const Arrivals = ({ products }) => {
   return (
-    <div className="flex flex-col items-center pt-14">
-      <p className="text-2xl font-medium text-left w-full">New Arrivals</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 flex-col items-center gap-6 mt-6 pb-14 w-full max-sm:gap-3">
-        {products.map((product, index) => <ProductsCard key={index} product={product} />)}
-      </div>
+    <div className="flex flex-col items-center pt-7">
       
-      <button  className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-        See more
-      </button>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-10 w-full">
+        {products.map((product) => (
+          <ProductsCard key={product._id} product={product} />
+          // <ProductGrid  key={product._id} product={product} />
+        ))}
+      </div>
     </div>
   );
 };
 
 export default Arrivals;
+

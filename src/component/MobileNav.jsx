@@ -4,6 +4,9 @@ import {  FaShoppingCart, FaHome, FaInfoCircle, FaPhone, FaShoppingBasket } from
 import { Link } from "react-router-dom";
 import CartItems from "./CartItems";
 import { RiUserLine } from "react-icons/ri";
+import WishListItems from "./WishListItems";
+import { getUser } from "@/api/authUser";
+import { useQuery } from "@tanstack/react-query";
 
 
 const MobileNav = () => {
@@ -26,16 +29,85 @@ const MobileNav = () => {
     };
   }, [open]);
 
+
+
+
+
+
+
+
+  const { data, isSuccess } = useQuery({
+      queryKey: ["auth-user"],
+      queryFn: getUser,
+      retry: false,
+    });
+  
+  
+  
+    const user = isSuccess ? data?.data?.user : null;
+  
+    console.log(user)
+  
+    const [oppen, setOppen] = useState(false);
+    const closeTimeout = useRef(null);
+  
+  
+  
+    const handleMouseEnter = () => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
+    setOppen(true);
+  };
+  
+  const handleMouseLeave = () => {
+    closeTimeout.current = window.setTimeout(() => {
+      setOppen(false);
+    }, 2000);
+  };
+  
+  
+    const avatarLetter = user?.email?.charAt(0).toUpperCase();
+
   return (
     <div className=" w-full top-0 fixed z-50 md:hidden flex justify-between items-center px-6 md:px-16 lg:px-32 py-3 border-b bg-white border-gray-300 text-gray-700">
 
-        <Link to={'/'} className='font-medium text-2xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</Link> 
+        <Link to={'/'} className='font-medium text-2xl max-sm:text-xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</Link> 
         <div className="flex justify-between items-center gap-5">
-           <div className='flex items-center gap-5 '>
-             <Link to={"/login"}>
-               <RiUserLine className="hover:cursor-pointer text-2xl"/>
-             </Link>
-                        
+           <div className='flex items-center gap-2 '>
+             {user?.role !== "user" ? (
+          <Link to="/login">
+            <RiUserLine className="text-2xl hover:cursor-pointer" />
+          </Link>
+        ) : (
+          <div
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+         
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-9 h-9 rounded-full object-cover cursor-pointer border max-sm:h-7 max-sm:w-7"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold cursor-pointer">
+                {avatarLetter}
+              </div>
+            )}
+
+            
+            <div
+              className={`absolute right-0 top-12 w-fit bg-white border rounded-lg shadow-lg px-4 py-3 text-sm text-gray-700 transition-all duration-200 ease-out max-sm:left-0 max-sm:text-xs max-sm:px-2 max-sm:py-2
+              ${oppen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+            >
+              <p className="font-medium truncate">{user.name}</p>
+            </div>
+          </div>
+        )}
+                      <WishListItems />
                      <CartItems />
                      </div>
             <button

@@ -1,21 +1,47 @@
 import { products }from "salesive-api-axios";
 
-export const getAllProducts = async () => {
+
+
+// export const getAllProducts = async () => {
+//   try {
+//     const response = await products.list({
+//     page: 1,
+//       limit: 20,
+//     });
+
+//     return response;
+//   } catch (err) {
+//     if (err instanceof Error) {
+//       throw new Error(
+//         err.message || "Error occurred while trying to fetch products"
+//       );
+//     }
+
+//     throw new Error("Unexpected error occurred while trying to fetch products");
+//   }
+// };
+
+export const getAllProducts = async ({ page = 1, limit = 10 }) => {
   try {
-    const response = await products.list();
+    const response = await products.list({
+      page,
+      limit,
+    });
+
     return response;
   } catch (err) {
     if (err instanceof Error) {
       throw new Error(
-        err?.message || "Error occurred while trying to fetch products"
+        err.message || "Error occurred while trying to fetch products"
       );
     }
 
-    throw new Error(
-      "Unexpected error occurred while trying to fetch products"
-    );
+    throw new Error("Unexpected error occurred while trying to fetch products");
   }
 };
+
+
+
 
 
 export const getProductDetails = async (id) => {

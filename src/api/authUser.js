@@ -1,4 +1,4 @@
-import {auth} from "salesive-api-axios";
+import {api, auth} from "salesive-api-axios";
 
 export const createGhostUser = async () => {
   try {
@@ -61,3 +61,25 @@ export const resendOtp = async ({email}) => {
         throw new Error("Unexpected error while trying to resend otp");
     }
 }
+
+
+// export const getUser = async () =>{
+//     try{
+//         const response = await api.get("auth/me")
+//         return response
+//     } catch(err) {
+//          if (err instanceof Error) {
+//             throw new Error(err?.message || "Error occurred while trying to fetch user");
+//         }
+//         throw new Error("Unexpected error while trying to fetch user");
+//     }
+// }
+
+export const getUser = async () => {
+  try {
+    const response = await api.get("auth/me");
+    return response.data; 
+  } catch (err) {
+    throw new Error("Not authenticated");
+  }
+};

@@ -7,6 +7,7 @@ import {
   RiErrorWarningFill,
 } from "react-icons/ri";
 import { useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useProductDetails } from "@/query/queryProducts";
 import {
@@ -55,8 +56,7 @@ const Product = () => {
   const [showFullDescription, setShowFullDescription] =
     useState(false);
 
-  const isLongDescription =
-    product?.plainDescription?.length > DESCRIPTION_LIMIT;
+  const isLongDescription =  product?.plainDescription?.length > DESCRIPTION_LIMIT;
 
   const displayedDescription = showFullDescription
     ? product?.plainDescription
@@ -231,18 +231,88 @@ const Product = () => {
     return `bg-${color}-500/80 text-${color}-700`;
   };
 
+  const images = useMemo(() => {
+  if (product?.images?.length) return product.images;
+  if (product?.image) return [product.image];
+  return [];
+}, [product]);
+
+const [activeImage, setActiveImage] = useState(null);
+
+useEffect(() => {
+  if (images.length) {
+    setActiveImage(images[0]);
+  }
+}, [images]);
+
   if (isLoading) return <FullPageLoader />;
   if (!product) return null;
 
   return (
-    <div className="pt-10 space-y-10">
+    <div className="pt-10 space-y-10 ">
       <div className="grid md:grid-cols-2 gap-16">
-        <div className="flex justify-center h-100">
-          <img
-            src={product.image}
-            className="rounded-lg bg-gray-100 h-full"
-          />
+        <div className="space-y-4 no-scrollbar">
+
+ 
+          <div className="relative w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeImage}
+                src={activeImage}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.03 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="w-full h-full object-cover"
+              />
+            </AnimatePresence>
+          </div>
+
+          
+          <motion.div
+          className="relative w-full overflow-hidden"
+        >
+          <motion.div
+            className="flex gap-3 pr-2 no-scrollbar"
+            drag="x"
+            dragElastic={0.15}
+            dragConstraints={{ left: 0, right: 0 }}
+          >
+            {images.map((img, index) => {
+              const isActive = img === activeImage;
+
+              return (
+                <motion.button
+                  key={index}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveImage(img)}
+                  className={`relative shrink-0 w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]
+                    rounded-xl overflow-hidden border transition no-scrollbar
+                    ${
+                      isActive
+                        ? "border-2 border-gray-800 "
+                        : "shadow-lg opacity-70 hover:opacity-100"
+                    }`}
+                >
+                  <img
+                    src={img}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeThumb"
+                      className="absolute inset-0 ring-2 ring-black rounded-xl"
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        </motion.div>
+
         </div>
+
 
         <div>
           <h1 className="text-3xl font-medium">
@@ -278,7 +348,7 @@ const Product = () => {
           </p>
 
           
-          {attributeKeys.map((key) => (
+          {/* {attributeKeys.map((key) => (
             <div key={key} className="mt-6 space-y-2">
               <p className="font-medium uppercase text-sm">
                 {key}
@@ -320,95 +390,205 @@ const Product = () => {
                 })}
               </div>
             </div>
-          ))}
+          ))} */}
+          {attributeKeys.map((key) => {
+  const isColor = key === "color" || key === "colour";
+
+  return (
+    <div
+      key={key}
+      className="mt-8 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
+    >
+      
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold tracking-wide uppercase text-gray-800">
+          {key}
+        </h3>
+
+        <span className="text-xs text-gray-400">
+          {selectedAttributes[key]}
+        </span>
+      </div>
+
+     
+      <div
+        className={`grid gap-3 ${
+          isColor ? "grid-cols-6 sm:grid-cols-8" : "grid-cols-2 sm:grid-cols-3"
+        }`}
+      >
+        {[...groupedAttributes[key]].map((value) => {
+          const active = selectedAttributes[key] === value;
+
+          return (
+            <motion.button
+              key={value}
+              onClick={() =>
+                setSelectedAttributes((prev) => ({
+                  ...prev,
+                  [key]: value,
+                }))
+              }
+              whileTap={{ scale: 0.96 }}
+              className={`relative flex items-center justify-center rounded-xl transition-all duration-300
+                ${
+                  isColor
+                    ? "h-10 w-10"
+                    : "px-4 py-3 text-sm font-medium"
+                }
+                ${
+                  active
+                    ? "bg-gray-800 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }
+              `}
+            >
+         
+              {isColor ? (
+                <span
+                  className="h-6 w-6 rounded-full border"
+                  style={{ backgroundColor: value.toLowerCase() }}
+                />
+              ) : (
+                value
+              )}
+
+            
+              {active && (
+                <motion.span
+                  layoutId={`active-${key}`}
+                  className="absolute inset-0 rounded-xl ring-2 ring-gray-800"
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                />
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
+})}
+
+
+
 
           {variantDetails && (
-            <div className="w-full shadow-2xl p-3 mt-5 font-template-badoni rounded-2xl space-y-2 relative">
-              {cartItem && (
-                <div className="absolute bg-amber-300/20 text-amber-600 p-1 w-fit top-2 right-2 text-xs">
-                  item is already in cart
-                </div>
-              )}
+  <div className="relative w-full max-w-md mt-10 bg-gradient-to-tr from-gray-50 via-white to-gray-50 shadow-xl rounded-3xl p-6 overflow-hidden border border-gray-100">
 
-              <div
-                className={`space-y-2 ${
-                  cartItem ? "mt-4" : "mt-0"
-                }`}
-              >
-                <div className="flex items-center gap-1">
-                  Instock
-                  {variantDetails.inStock ? (
-                    <div className="bg-green-300/80 text-green-900 rounded-full p-1 text-sm">
-                      <FaCheck />
-                    </div>
-                  ) : (
-                    <div className="bg-yellow-500/50 text-yellow-500">
-                      <RiErrorWarningFill />
-                    </div>
-                  )}
-                </div>
+    <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-2xl shadow-md z-10">
+      {variantDetails.inStock ? "In Stock" : "Out of Stock"}
+    </div>
 
-                <div>
-                  <strong>Product:</strong>{" "}
-                  {variantDetails.sku}
-                </div>
+    <div className="mb-4">
+      <span className="text-gray-500 text-sm">Product SKU:</span>
+      <h2 className="text-lg font-bold text-gray-800">{variantDetails.sku}</h2>
+    </div>
 
-                <div>
-                  <strong>Weight:</strong>{" "}
-                  {variantDetails.weight}
-                </div>
+    
+    <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col">
+        <span className="text-gray-400 text-xs uppercase">Weight</span>
+        <span className="font-medium text-gray-700">{variantDetails.weight}</span>
+      </div>
+      <div className="flex flex-col items-end">
+        <span className="text-gray-400 text-xs uppercase">Available</span>
+        <span className="font-medium text-gray-700">
+          {variantDetails.quantity} {variantDetails.quantity <= 1 ? "unit" : "units"}
+        </span>
+      </div>
+    </div>
 
-                <div>
-                  {variantDetails.quantity}{" "}
-                  {variantDetails.quantity <= 1
-                    ? "unit"
-                    : "units"}{" "}
-                  available
-                </div>
+   
+    <div className="relative bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-2xl p-4 shadow-inner flex items-center justify-between">
+      <div>
+        <span className="text-sm text-gray-500">Price</span>
+        <h3 className="text-xl font-bold text-gray-900 mt-1">{formatPrice(variantDetails.price)}</h3>
+      </div>
+      <div className="flex items-center gap-2 text-green-600">
+        {variantDetails.inStock ? (
+          <FaCheck className="text-xl" />
+        ) : (
+          <RiErrorWarningFill className="text-xl" />
+        )}
+      </div>
+    </div>
 
-                <div className="mt-2 bg-green-300/80 text-green-900 w-fit p-2 font-medium rounded-2xl">
-                  {formatPrice(variantDetails.price)}
-                </div>
-              </div>
-            </div>
-          )}
+  
+    {cartItem && (
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center gap-2">
+        <RiErrorWarningFill /> Item already in cart
+      </div>
+    )}
+  </div>
+)}
 
-          <div className="flex items-center gap-4 mt-10">
-            <div className="flex items-center border rounded-full px-4 py-2 gap-4">
-              <button onClick={handleDecrease}>
-                <RiSubtractLine />
-              </button>
 
-              <input
-                type="text"
-                value={qty}
-                onChange={handleQtyChange}
-                className="w-12 text-center bg-transparent outline-none"
-              />
 
-              <button onClick={handleIncrease}>
-                <RiAddLine />
-              </button>
-            </div>
+          <div className="mt-5 rounded-3xl bg-white/70 backdrop-blur-xl border border-gray-100 shadow-xl p-5 flex flex-col gap-5">
 
-            <button
-              onClick={handleAddToCart}
-              disabled={isadding || isupdating || isupdatingVariant}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl max-sm:text-sm max-sm:px-3"
-            >
-              <RiShoppingCartLine />
-              {isadding || isupdating || isupdatingVariant ? (
-                <div className="flex items-center gap-3">
-                  <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-                  {cartItem ? "updating..." : "adding..."}
-                </div>
-              ) : cartItem ? (
-                "Update Cart"
-              ) : (
-                "Add to Cart"
-              )}
-            </button>
-          </div>
+
+  <div className="flex items-center justify-between">
+    <span className="text-sm font-medium text-gray-600">
+      Quantity
+    </span>
+
+    <div className="flex items-center bg-gray-100 rounded-full px-2 py-1 shadow-inner">
+      <button
+        onClick={handleDecrease}
+        className="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
+      >
+        <RiSubtractLine />
+      </button>
+
+      <input
+        type="text"
+        value={qty}
+        onChange={handleQtyChange}
+        className="w-12 text-center bg-transparent outline-none text-base font-semibold text-gray-800"
+      />
+
+      <button
+        onClick={handleIncrease}
+        className="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
+      >
+        <RiAddLine />
+      </button>
+    </div>
+  </div>
+
+
+  <button
+    onClick={handleAddToCart}
+    disabled={isadding || isupdating || isupdatingVariant}
+    className={`relative flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white font-semibold text-base transition-all
+      ${
+        cartItem
+          ? "bg-black hover:bg-gray-900"
+          : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+      }
+      disabled:opacity-70 disabled:cursor-not-allowed
+    `}
+  >
+   
+    {(isadding || isupdating || isupdatingVariant) ? (
+      <div className="flex items-center gap-3">
+        <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        <span className="tracking-wide">
+          {cartItem ? "Updating cart…" : "Adding to cart…"}
+        </span>
+      </div>
+    ) : (
+      <>
+        <RiShoppingCartLine className="text-xl" />
+        <span className="tracking-wide">
+          {cartItem ? "Update Cart" : "Add to Cart"}
+        </span>
+      </>
+    )}
+  </button>
+</div>
+
+
+
         </div>
       </div>
     </div>

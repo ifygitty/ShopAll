@@ -13,13 +13,19 @@ import { Link } from "react-router-dom";
 import {
   useCartItems,
   useClearCartItem,
+  useClearWishItem,
   useDeleteCartItem,
   useDeleteCartItemVariant,
+  useDeleteWishItem,
+  useDeleteWishItemVariant,
+  useGetWishListItems,
   useUpdateCartItemQuantity,
   useUpdateCartItemQuantityVariant,
 } from "@/query/queryCart";
 import { formatPrice } from "@/utils/format";
 import { toast } from "sonner";
+import { AiOutlineHeart } from "react-icons/ai";
+import { deleteWishListItem } from "@/api/cart";
 
 const listVariants = {
   hidden: {},
@@ -40,36 +46,30 @@ const itemVariants = {
   },
 };
 
-const CartItems = () => {
+const WishListItems = () => {
   const [open, setOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const navRef = useRef(null);
 
   const { data: cartResponse } = useCartItems();
+  const { mutate: deleteWishItem } = useDeleteWishItem();
+    const { mutate:deleteWishItemVariant } = useDeleteWishItemVariant();
+  const { data: wishListResponse } = useGetWishListItems();
+  const { mutate: clearAll, isPending: isClearing } = useClearWishItem();
 
-  const cartItems = Array.isArray(cartResponse?.data?.items)
-    ? cartResponse.data.items
+  
+    const wishItems = Array.isArray(wishListResponse?.data?.items)
+    ? wishListResponse.data.items
     : [];
-    console.log(cartItems)
 
-  const totalQuantity = cartItems.reduce(
-    (acc, item) => acc + item.quantity,
-    0
-  );
+    console.log(wishItems)
 
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.quantity * Number(item.product.price),
-    0
-  );
 
-  const { mutate: deleteCartItem } = useDeleteCartItem();
-  const { mutate:deleteCartVariant } = useDeleteCartItemVariant();
-  const { mutate: clearAll, isPending: isClearing } = useClearCartItem();
-  const { mutate: updateQty, isPending: isUpdating } =
-    useUpdateCartItemQuantity();
-  const { mutate:updateVariantQty, isPending: isUpdatingv } =
-    useUpdateCartItemQuantityVariant();
+  const totalQuantity = wishItems.length
 
+  
+
+  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
@@ -83,99 +83,41 @@ const CartItems = () => {
   }, [open]);
 
 
-  const increaseQty = (e, item) => {
-  e.stopPropagation();
-
-  if (item.variantId) {
-    console.log(item.variantId)
-    updateVariantQty({
-      productId: item.productId,
-      variantId: item.variantId,
-      quantity: item.quantity + 1,
-    },
-    {
-      onSuccess: () =>
-        toast.success("Cart item updated successfully"),
-      onError: () =>
-        toast.error("Failed to update cart item"),
-      }
-  );
-  } else {
-    
-    updateQty({
-      productId: item.productId,
-      quantity: item.quantity + 1,
-    },
-    {
-      onSuccess: () =>
-        toast.success("Cart item updated successfully"),
-      onError: () =>
-        toast.error("Failed to update cart item"),
-      }
-  );
-  }
-};
-
-
-
-  const decreaseQty = (e, item) => {
-  e.stopPropagation();
-  if (item.quantity <= 1) return;
-
-  if (item.variantId) {
-    updateVariantQty({
-      productId: item.productId,
-      variantId: item.variantId,
-      quantity: item.quantity - 1,
-    },
-    {
-      onSuccess: () =>
-        toast.success("Cart item updated successfully"),
-      onError: () =>
-        toast.error("Failed to update cart item"),
-      }
-  );
-  } else {
-    updateQty({
-      productId: item.productId,
-      quantity: item.quantity - 1,
-    },
-    {
-      onSuccess: () =>
-        toast.success("Cart item updated successfully"),
-      onError: () =>
-        toast.error("Failed to update cart item"),
-      }
-  );
-  }
-};
-
   const removeItem = (e, item) => {
   e.stopPropagation();
 
-  if (item.variantId) {
-    deleteCartVariant({
-      productId: item.productId,
-      variantId: item.variantId,
+  if (item.variant) {
+    deleteWishItemVariant({
+      productId: item.product._id,
+      variantId: item.product.variant._id,
     },
     {
             onSuccess: () => {
-              toast.success("cart item deleted successfully");
+              toast.success("wish item deleted successfully");
             },
             onError: () => {
-              toast.error("Failed delete cart item");
+              toast.error("Failed delete wish item");
             },
         }
   );
   } else {
-    deleteCartItem({
-      productId: item.productId,
-    });
+    deleteWishItem({
+      productId: item.product._id,
+    },
+    {
+            onSuccess: () => {
+              toast.success("wish item deleted successfully");
+            },
+            onError: () => {
+              toast.error("Failed delete wish item");
+            },
+        }
+);
   }
 };
 
 
-  const clearCart = () => {
+  const clearWishList = () => {
     clearAll(undefined, {
       onSuccess: () => setShowConfirm(false),
     },
@@ -192,7 +134,6 @@ const CartItems = () => {
 
   return (
    
-
     
     <div className={`relative
                           ${open === false ? "z-20" : "z-30"}`}>
@@ -202,7 +143,7 @@ const CartItems = () => {
         className="relative flex items-center justify-center h-12 w-12 rounded-full
                    hover:bg-gray-100 transition group max-sm:h-8 max-sm:w-8"
       >
-        <RiShoppingCartLine className="text-2xl text-gray-800 max-sm:text-xl" />
+        <AiOutlineHeart className="text-2xl text-gray-800 max-sm:text-xl " />
 
         {totalQuantity > 0 && (
           <span
@@ -216,10 +157,11 @@ const CartItems = () => {
         )}
       </button>
 
-     
+    
       <AnimatePresence>
         {open && (
           <>
+          
             <motion.div
               className="fixed inset-0 bg-black/50 backdrop-blur-sm"
               initial={{ opacity: 0 }}
@@ -227,6 +169,7 @@ const CartItems = () => {
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
             />
+
             <motion.div
               ref={navRef}
               initial={{ x: "100%" }}
@@ -237,9 +180,10 @@ const CartItems = () => {
                           bg-white flex flex-col z-50
                           ${isClearing ? "pointer-events-none opacity-70" : ""}`}
             >
-              <div className="flex items-center justify-between px-6 py-5 border-b relative z-40">
+          
+              <div className="flex items-center justify-between px-6 py-5 border-b ">
                 <div>
-                  <p className="text-lg font-semibold">Your Cart</p>
+                  <p className="text-lg font-semibold">Your wishlist</p>
                   <p className="text-xs text-gray-500">
                     {totalQuantity} item{totalQuantity !== 1 && "s"}
                   </p>
@@ -254,15 +198,15 @@ const CartItems = () => {
                 </button>
               </div>
 
-             
+              
               <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4 no-scrollbar">
-                {cartItems.length === 0 && (
+                {wishItems.length === 0 && (
                   <p className="text-center text-gray-500 mt-20">
-                    Your cart is empty
+                    Your wishlist is empty
                   </p>
                 )}
 
-                {cartItems.map((item) => (
+                {wishItems.map((item) => (
                   <motion.div
                     key={item.product._id}
                     layout
@@ -270,7 +214,7 @@ const CartItems = () => {
                   >
                     <div className="flex gap-4">
                       <img
-                        src={item.image}
+                        src={item.product.image}
                         className="w-16 h-16 rounded-xl object-cover"
                       />
 
@@ -283,31 +227,8 @@ const CartItems = () => {
                           {formatPrice(item.product.price)}
                         </p>
 
-                       
-                        <div
-                          className="mt-3 inline-flex items-center gap-3
-                                     bg-gray-100 rounded-full px-3 py-1"
-                        >
-                          <button
-                            onClick={(e) => decreaseQty(e, item)}
-                            disabled={item.quantity <= 1 || isUpdating}
-                            className="text-gray-600"
-                          >
-                            <RiSubtractLine />
-                          </button>
-
-                          <span className="text-sm font-semibold w-4 text-center">
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            onClick={(e) => increaseQty(e, item)}
-                            disabled={isUpdating}
-                            className="text-gray-600"
-                          >
-                            <RiAddLine />
-                          </button>
-                        </div>
+                    
+                        
 
                       
                         {item.variantAttributes && (
@@ -328,7 +249,7 @@ const CartItems = () => {
                       </div>
                     </div>
 
-                    
+                  
                     <button
                       onClick={(e) => removeItem(e, item)}
                       className="absolute top-3 right-3 text-gray-400
@@ -350,30 +271,17 @@ const CartItems = () => {
               </div>
 
               <div className="border-t px-6 py-5 space-y-4">
-                <div className="flex justify-between text-base font-semibold">
-                  <span>Total</span>
-                  <span>{formatPrice(totalPrice)}</span>
-                </div>
-
-                <Link
-                  to="/checkout"
-                  onClick={() => setOpen(false)}
-                  className="block w-full text-center py-4 rounded-2xl
-                             bg-black text-white font-semibold
-                             hover:bg-gray-900 transition"
-                >
-                  Proceed to Checkout
-                </Link>
-
-                {cartItems.length > 0 && (
+          
+                {wishItems.length > 0 && (
                   <button
                     onClick={() => setShowConfirm(true)}
                     className="w-full text-sm text-red-600 hover:underline text-center"
                   >
-                    Empty cart
+                    Empty wishList?
                   </button>
                 )}
               </div>
+
             </motion.div>
           </>
         )}
@@ -393,7 +301,7 @@ const CartItems = () => {
             <motion.div className="fixed inset-0 z-50 flex items-center justify-center">
               <div className="bg-white rounded-2xl p-6 w-[90%] max-w-sm">
                 <h3 className="font-semibold text-center">
-                  Empty cart?
+                  Empty wishList?
                 </h3>
 
                 <p className="text-sm text-gray-500 text-center mt-2">
@@ -410,7 +318,7 @@ const CartItems = () => {
                   </button>
 
                   <button
-                    onClick={clearCart}
+                    onClick={clearWishList}
                     disabled={isClearing}
                     className="w-full py-2 rounded-xl bg-red-600
                                text-white flex items-center justify-center gap-2"
@@ -435,5 +343,5 @@ const CartItems = () => {
   );
 };
 
-export default CartItems;
+export default WishListItems;
 

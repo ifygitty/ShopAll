@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCheckEmail, useSendOtp } from "@/query/queryUser-auth";
+import SweetLoader from "../SweetLoader";
 export default function EmailStep({ onSuccess }) {
   const [email, setEmail] = useState("");
 
@@ -19,7 +20,7 @@ export default function EmailStep({ onSuccess }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center">Welcome 👋</h2>
+      {/* <h2 className="text-2xl font-bold text-center">Welcome 👋</h2>
       <p className="text-center text-gray-500 mt-2">
         Enter your email to continue
       </p>
@@ -37,7 +38,8 @@ export default function EmailStep({ onSuccess }) {
         className="w-full mt-4 py-3 bg-black text-white rounded-lg"
       >
         Continue
-      </button>
+      </button> */}
+      <SweetLoader />
     </>
   );
 }
