@@ -245,11 +245,15 @@ useEffect(() => {
   }
 }, [images]);
 
+const maxQty =
+  selectedVariant?.quantity ??
+  product?.quantity ??
+  1;
   if (isLoading) return <FullPageLoader />;
   if (!product) return null;
 
   return (
-    <div className="pt-10 space-y-10 ">
+    <div className="pt-10 space-y-10 md:pt-15">
       <div className="grid md:grid-cols-2 gap-16">
         <div className="space-y-4 no-scrollbar">
 
@@ -327,7 +331,7 @@ useEffect(() => {
             <p>(4.5)</p>
           </div>
 
-          <p className="text-gray-600 mt-4">
+          <p className="text-gray-600 mt-4 leading-relaxed">
             {displayedDescription}
             {!showFullDescription && isLongDescription && "..."}
           </p>
@@ -521,11 +525,21 @@ useEffect(() => {
   </div>
 )}
 
+ 
+{product?.variants?.length? null : <span className="text-sm font-medium text-gray-600 mt-5">
+   {product?.quantity} {product?.quantity <= 1 ? "unit" : "units"} available
+  </span> }
 
+    {product?.variants?.length? null : <div>
+      {cartItem && (
+      <div className="w-fit mt-10 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center gap-2">
+        <RiErrorWarningFill /> Item already in cart
+      </div>
+    )}
+    </div> }
+    
 
-          <div className="mt-5 rounded-3xl bg-white/70 backdrop-blur-xl border border-gray-100 shadow-xl p-5 flex flex-col gap-5">
-
-
+  <div className="mt-5 rounded-3xl bg-white/70 backdrop-blur-xl border border-gray-100 shadow-xl p-5 flex flex-col gap-5">
   <div className="flex items-center justify-between">
     <span className="text-sm font-medium text-gray-600">
       Quantity
@@ -533,8 +547,9 @@ useEffect(() => {
 
     <div className="flex items-center bg-gray-100 rounded-full px-2 py-1 shadow-inner">
       <button
+       disabled={qty === 1}
         onClick={handleDecrease}
-        className="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
+        className="disabled:opacity-40 disabled:cursor-not-allowed h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
       >
         <RiSubtractLine />
       </button>
@@ -543,12 +558,13 @@ useEffect(() => {
         type="text"
         value={qty}
         onChange={handleQtyChange}
-        className="w-12 text-center bg-transparent outline-none text-base font-semibold text-gray-800"
+        className=" w-12 text-center bg-transparent outline-none text-base font-semibold text-gray-800"
       />
 
       <button
+      disabled={qty === maxQty}
         onClick={handleIncrease}
-        className="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
+        className="disabled:opacity-40 disabled:cursor-not-allowed h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-white hover:shadow transition"
       >
         <RiAddLine />
       </button>

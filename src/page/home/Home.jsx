@@ -9,12 +9,17 @@ import SearchBar from "@/component/SearchBar";
 
 
 import { useGetListProducts } from "@/query/queryProducts";
+import { useSearchParams } from "react-router-dom";
+import { useSalesiveConfig } from "salesive-dev-tools";
 
 const LIMIT = 10;
 
 const Home = () => {
-  const [page, setPage] = useState(1);
+const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
+
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+const page = pageFromUrl;
 
   const { data, isLoading, isError, error } = useGetListProducts({
     page,
@@ -35,9 +40,22 @@ const Home = () => {
 
   const isSearching = search.trim().length > 0;
 
+  const handlePageChange = (newPage) => {
+  if (newPage === 1) {
+    
+    setSearchParams({});
+  } else {
+    setSearchParams({ page: newPage.toString() });
+  }
+};
+
+const variables = useSalesiveConfig()
+console.log(variables)
+
   return (
     <>
       <Banner />
+      
 
       <SearchBar
         value={search}
@@ -74,8 +92,9 @@ const Home = () => {
               pages={pagination.pages}
               hasNext={pagination.hasNext}
               hasPrev={pagination.hasPrev}
-              onPageChange={setPage}
+              onPageChange={handlePageChange}
             />
+
           )}
         </>
       )}

@@ -80,7 +80,7 @@ const Category = () => {
               className={`relative whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-colors
                 ${isActive
                   ? 'text-white'
-                  : 'text-gray-600 hover:text-black'
+                  : 'text-gray-600 hover:text-black hover:cursor-pointer'
                 }`}
             >
               {isActive && (

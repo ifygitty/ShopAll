@@ -9,7 +9,7 @@ import {
   RiEyeLine,
 } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   useCartItems,
   useClearCartItem,
@@ -190,9 +190,16 @@ const CartItems = () => {
   );
   };
 
-  return (
-   
+  const navigate = useNavigate()
 
+  const handleCheckOut = () =>{
+    setOpen(false)
+    if(cartItems.length > 0){
+      navigate("/cart")
+    }
+  }
+
+  return (
     
     <div className={`relative
                           ${open === false ? "z-20" : "z-30"}`}>
@@ -200,7 +207,7 @@ const CartItems = () => {
       <button
         onClick={() => setOpen(true)}
         className="relative flex items-center justify-center h-12 w-12 rounded-full
-                   hover:bg-gray-100 transition group max-sm:h-8 max-sm:w-8"
+                   hover:bg-gray-100 transition group max-sm:h-8 max-sm:w-8 hover:cursor-pointer"
       >
         <RiShoppingCartLine className="text-2xl text-gray-800 max-sm:text-xl" />
 
@@ -355,15 +362,16 @@ const CartItems = () => {
                   <span>{formatPrice(totalPrice)}</span>
                 </div>
 
-                <Link
-                  to="/checkout"
-                  onClick={() => setOpen(false)}
+               {cartItems.length > 0 && (
+                <button
+                  onClick={handleCheckOut}
                   className="block w-full text-center py-4 rounded-2xl
-                             bg-black text-white font-semibold
-                             hover:bg-gray-900 transition"
+                             bg-blue-600 text-white font-semibold
+                             hover:bg-blue-800 transition"
                 >
-                  Proceed to Checkout
-                </Link>
+                 Finalize Purchase
+                </button>
+                )}
 
                 {cartItems.length > 0 && (
                   <button

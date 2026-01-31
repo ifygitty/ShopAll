@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {  FaShoppingCart, FaHome, FaInfoCircle, FaPhone, FaShoppingBasket } from 'react-icons/fa'
 import { Link } from "react-router-dom";
 import CartItems from "./CartItems";
-import { RiUserLine } from "react-icons/ri";
+import { RiCloseLine, RiUserLine } from "react-icons/ri";
 import WishListItems from "./WishListItems";
 import { getUser } from "@/api/authUser";
 import { useQuery } from "@tanstack/react-query";
+import { useSalesiveConfig } from "salesive-dev-tools";
 
 
 const MobileNav = () => {
@@ -29,21 +30,13 @@ const MobileNav = () => {
     };
   }, [open]);
 
-
-
-
-
-
-
-
   const { data, isSuccess } = useQuery({
       queryKey: ["auth-user"],
       queryFn: getUser,
       retry: false,
     });
   
-  
-  
+
     const user = isSuccess ? data?.data?.user : null;
   
     console.log(user)
@@ -69,10 +62,29 @@ const MobileNav = () => {
   
     const avatarLetter = user?.email?.charAt(0).toUpperCase();
 
-  return (
-    <div className=" w-full top-0 fixed z-50 md:hidden flex justify-between items-center px-6 md:px-16 lg:px-32 py-3 border-b bg-white border-gray-300 text-gray-700">
+    const variables = useSalesiveConfig()
 
-        <Link to={'/'} className='font-medium text-2xl max-sm:text-xl'><span className='font-medium text-blue-600 text-2xl'>S</span>hopAll</Link> 
+    const getInitials = (name = "") => {
+  const words = name.trim().split(" ").filter(Boolean);
+
+  if (words.length === 0) return "";
+  if (words.length === 1) return words[0][0].toUpperCase();
+
+  const first = words[0][0];
+  const last = words[words.length - 1][0];
+
+  return (first + last).toUpperCase();
+};
+
+
+  return (
+    <div className=" w-full top-0 fixed z-50 md:hidden flex justify-between items-center px-6 md:px-16 lg:px-32 max-sm:px-4  border-b bg-white border-gray-300 text-gray-700">
+
+        {variables?.logo ? <Link className="w-20 h-20 rounded-full">
+        <img className="w-full h-full" src={variables.logo} alt="" />
+      </Link> : <Link to="/" className="font-medium text-2xl">
+        <span className="text-blue-600">S</span>hopAll
+      </Link>}
         <div className="flex justify-between items-center gap-5">
            <div className='flex items-center gap-2 '>
              {user?.role !== "user" ? (
@@ -86,17 +98,11 @@ const MobileNav = () => {
             onMouseLeave={handleMouseLeave}
           >
          
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-9 h-9 rounded-full object-cover cursor-pointer border max-sm:h-7 max-sm:w-7"
-              />
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold cursor-pointer">
-                {avatarLetter}
-              </div>
-            )}
+            <p className="w-12 h-12 flex items-center justify-center 
+              text-gray-200 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 
+              rounded-full font-semibold font-template-badoni md:hidden avatar max-sm:h-10 max-sm:w-10 max-sm:text-sm">
+ {getInitials(user?.name)}
+</p>
 
             
             <div
@@ -135,29 +141,33 @@ const MobileNav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-
-            
             <motion.div
               ref={navRef}
-              className="fixed top-0 right-0 w-2/4 h-full bg-white shadow-lg p-6 z-50"
+              className="fixed top-0 right-0 w-2/4 h-full bg-white shadow-lg p-6 z-50 max-sm:w-3/4"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <nav className="flex flex-col gap-6">
-                <Link onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaHome /> Home</Link>
-                <Link onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaShoppingBasket /> Shop</Link>
-               <Link onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaInfoCircle /> About</Link>
-                <Link onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaPhone /> Phone</Link>
-
-                <button
+               
+               <div className="relative">
+                <button 
                   onClick={() => setOpen(false)}
-                  className="mt-6 text-red-500"
+                  className="h-9 w-9 rounded-full flex items-center justify-center
+                              hover:bg-gray-100 transition"
                 >
-                  Close
+                  <RiCloseLine size={20} />
                 </button>
+                <nav className="flex flex-col gap-6 mt-6">
+                <Link onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaHome /> Home</Link>
+                <Link to={"/orders"} onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaShoppingBasket /> Orders</Link>
+               <Link to={"/about-us"} onClick={() => setOpen(false)} className="flex gap-3 items-center"><FaInfoCircle /> About</Link>
+               
+
+                
               </nav>
+               </div>
+              
             </motion.div>
           </>
         )}

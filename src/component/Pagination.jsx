@@ -8,7 +8,7 @@ const Pagination = ({ page, pages, hasNext, hasPrev, onPageChange }) => {
       <button
         disabled={!hasPrev}
         onClick={() => onPageChange(page - 1)}
-        className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-40"
+        className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-40 hover:cursor-pointer"
       >
         <RiArrowLeftSLine />
       </button>
@@ -26,7 +26,7 @@ const Pagination = ({ page, pages, hasNext, hasPrev, onPageChange }) => {
               ${
                 active
                   ? "bg-black text-white shadow-lg"
-                  : "bg-gray-100 hover:bg-gray-200"
+                  : "bg-gray-100 hover:bg-gray-200 hover:cursor-pointer"
               }`}
           >
             {num}
@@ -37,7 +37,7 @@ const Pagination = ({ page, pages, hasNext, hasPrev, onPageChange }) => {
       <button
         disabled={!hasNext}
         onClick={() => onPageChange(page + 1)}
-        className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-40"
+        className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-40 hover:cursor-pointer"
       >
         <RiArrowRightSLine />
       </button>

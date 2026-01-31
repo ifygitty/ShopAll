@@ -1,91 +1,119 @@
-import React, {useState, useEffect} from 'react'
-import  {FaArrowRight, FaChevronRight} from 'react-icons/fa'
-const Banner = () => {
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiZap, FiLayers } from "react-icons/fi";
 
-    const sliderData = [
-    {
-      id: 1,
-      title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
-      offer: "Limited Time Offer 30% Off",
-      buttonText1: "Buy now",
-      imgSrc: "/image/accessories/header_headphone_image.png",
-    },
-    {
-      id: 2,
-      title: "Next-Level Outfits Starts Here - Discover more fashion you can ever imagine",
-      offer: "Hurry up only few lefts!",
-      buttonText1: "Shop Now",
-      imgSrc: "/image/clothes/img3.png",
-    },
-    {
-      id: 3,
-      title: "Power Meets Elegance - Incredible fragrance awaits you",
-      offer: "Exclusive Deal 40% Off",
-      buttonText1: "Order Now",
-      imgSrc: "/image/perfumes/image3.jpg",
-    }
-    ]
-    const [currentSlide, setCurrentSlide] = useState(0);
+const SLIDES = [
+  {
+    id: 1,
+    tag: "MODERN COMFORT",
+    title: "Soft. Clean. Elevated.",
+    description:
+      "A new way to experience simplicity — where design stays quiet and quality speaks.",
+    icon: FiLayers,
+  },
+  {
+    id: 2,
+    tag: "DESIGNED TO FLOW",
+    title: "Effortlessly Premium",
+    description:
+      "Products shaped by clarity, intention, and timeless appeal.",
+    icon: FiZap,
+  },
+];
 
-    useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [sliderData.length]);
+export default function GlassIntroSlider() {
+  const [index, setIndex] = useState(0);
 
-  const handleSlideChange = (index) => {
-    setCurrentSlide(index);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIndex((i) => (i + 1) % SLIDES.length);
+    }, 6500);
+
+    return () => clearTimeout(timer);
+  }, [index]);
+
+  const slide = SLIDES[index];
+  const Icon = slide.icon;
 
   return (
-    <div className='overflow-hidden relative w-full'>
-        <div className="flex transition-transform duration-700 ease-in-out"
-        style={{
-          transform: `translateX(-${currentSlide * 100}%)`,
-        }}>
-            {sliderData.map((slide, index) => (
-            <div key={slide.id}
-            className="flex flex-col-reverse md:flex-row items-center justify-between bg-[#E6E9F2] py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full">
-                
-            <div className="md:pl-8 mt-10 md:mt-0">
-              <p className="md:text-base text-blue-600 pb-1">{slide.offer}</p>
-              <h1 className="max-w-lg md:text-[30px] md:leading[48px] lg:text-[35px] text-2xl font-semibold max-sm:text-xl">
-                {slide.title}
-              </h1>
-              <div className="flex items-center mt-4 md:mt-6 ">
-                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-blue-600 rounded-full text-white font-medium max-sm:text-sm max-sm:px-5">
-                  {slide.buttonText1}
-                  
-                </button>
-                
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <img
-                className="md:w-72 w-48"
-                src={slide.imgSrc}
-                alt={`Slide ${index + 1}`}
+    <section className="relative mt-35 max-md:mt-28 max-sm:mt-26  rounded-[2.8rem] bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950">
+      <div className=" mx-auto ">
+        {/* <div className="max-w-6xl mx-auto "></div> */}
+        <div
+          className="
+            relative
+            overflow-hidden
+            rounded-[2.8rem]
+            border border-white/20
+            bg-white/10
+            backdrop-blur-xl
+            shadow-[0_40px_120px_rgba(0,0,0,0.25)]
+          "
+        >
+          {/* floating glow */}
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-blue-500/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-cyan-400/30 rounded-full blur-3xl" />
+
+          <div className="relative min-h-[360px] flex items-center px-16">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={slide.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-20 w-full text-white"
+              >
+                {/* TEXT */}
+                <div className="flex flex-col justify-center">
+                  <span className="mb-5 text-xs tracking-[0.3em] text-cyan-200">
+                    {slide.tag}
+                  </span>
+
+                  <h2 className="text-[clamp(2.4rem,4vw,3.2rem)] font-light leading-tight">
+                    {slide.title}
+                  </h2>
+
+                  <p className="mt-6 max-w-md text-white/70 leading-relaxed">
+                    {slide.description}
+                  </p>
+                </div>
+
+                {/* ICON */}
+                <div className="relative flex items-center justify-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute w-64 h-64 rounded-full bg-white/10"
+                  />
+
+                  <motion.div
+                    animate={{ y: [0, -12, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center"
+                  >
+                    <Icon size={36} />
+                  </motion.div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* dots */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+            {SLIDES.map((_, i) => (
+              <span
+                key={i}
+                className={`h-2 rounded-full transition-all ${
+                  i === index
+                    ? "w-8 bg-cyan-300"
+                    : "w-2 bg-white/30"
+                }`}
               />
-            </div>
-            </div>
             ))}
+          </div>
         </div>
-
-        <div className="flex items-center justify-center gap-2 mt-8">
-        {sliderData.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => handleSlideChange(index)}
-            className={`h-2 w-2 rounded-full cursor-pointer ${
-              currentSlide === index ? "bg-blue-600" : "bg-gray-500/30"
-            }`}
-          ></div>
-        ))}
       </div>
-
-    </div>
-  )
+    </section>
+  );
 }
-
-export default Banner

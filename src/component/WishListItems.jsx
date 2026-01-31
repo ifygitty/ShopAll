@@ -141,7 +141,7 @@ const WishListItems = () => {
       <button
         onClick={() => setOpen(true)}
         className="relative flex items-center justify-center h-12 w-12 rounded-full
-                   hover:bg-gray-100 transition group max-sm:h-8 max-sm:w-8"
+                   hover:bg-gray-100 transition group max-sm:h-8 max-sm:w-8 hover:cursor-pointer"
       >
         <AiOutlineHeart className="text-2xl text-gray-800 max-sm:text-xl " />
 

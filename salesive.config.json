@@ -15,26 +15,62 @@
     }
   },
   "variables": {
-    "name": "ecom",
-    "description": "Salesive App Template",
-    "logo": "https://salesive.com/android-chrome-192x192.png",
-    "favicon": "https://salesive.com/favicon.ico",
-    "banner": "https://salesive.com/android-chrome-192x192.png",
-    "color-brand-primary": "#0d65d9",
-    "color-brand-secondary": "#34be82",
-    "color-brand-secondary-light": "#eaf7f2",
-    "color-brand-secondary-dark": "#268a60",
-    "color-brand-accent": "#ff6b6b",
-    "color-brand-accent-light": "#ffeeee",
-    "color-brand-accent-dark": "#e64c4c",
-    "color-text-primary": "#333333",
-    "color-text-secondary": "#666666",
-    "color-text-muted": "#999999",
-    "color-bg-light": "#f8f9fa",
-    "color-bg-dark": "#212529",
-    "color-success": "#28a745",
-    "color-warning": "#ffc107",
-    "color-error": "#dc3545",
-    "color-info": "#17a2b8"
+    "name": "alex",
+    "description": "Sell More, Buy  More,",
+    "logo": "https://files.salesive.com/api/files/6965764e0b41787bf25561b2",
+    "favicon": "https://res.cloudinary.com/computer-geek/image/upload/v1754150277/Salesive/Mark1_xv3yjc.png",
+    "country": {
+        "_id": "68e29cc11387f92837bf4356",
+        "name": "Nigeria",
+        "code": "NG",
+        "image": "https://hatscripts.github.io/circle-flags/flags/ng.svg",
+        "active": true,
+        "__v": 0
+    },
+    "currency": {
+        "_id": "68e29cc11387f92837bf434f",
+        "name": "Nigerian Naira",
+        "symbol": "₦",
+        "code": "NGN",
+        "url": "https://hatscripts.github.io/circle-flags/flags/ng.svg",
+        "active": true,
+        "default": true,
+        "__v": 0
+    },
+    "location": {
+        "address": "Onitsha South, Nigeria",
+        "city": "",
+        "coordinates": {
+            "lat": 6.13936475,
+            "lng": 6.773247019073018
+        },
+        "country": "NG",
+        "email": "ifeanyiokolo463@gmail.com",
+        "name": "alex",
+        "phone": "07065391465",
+        "state": "Anambra",
+        "zipCode": ""
+    },
+    "socialMedia": {
+        "facebook": "",
+        "instagram": "",
+        "tiktok": "",
+        "x": ""
+    },
+    "rating": 0,
+    "numReviews": 0,
+    "app": {
+        "name": "alex",
+        "shortName": "alex",
+        "description": "Sell More, Buy  More,",
+        "logo": "https://res.cloudinary.com/computer-geek/image/upload/v1754150277/Salesive/Mark1_xv3yjc.png",
+        "favicon": "https://res.cloudinary.com/computer-geek/image/upload/v1754150277/Salesive/Mark1_xv3yjc.png",
+        "themeColor": "#0D65D9",
+        "backgroundColor": "#ffffff",
+        "startUrl": "/?pwa=true",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait-primary"
+    }
   }
 }

@@ -5,6 +5,8 @@ import Root from "../page/Root";
 import Home from "../page/home/Home";
 import AuthModal from "@/component/auth/AuthModal";
 import Category from "@/page/category/Category";
+import CheckOut from "@/component/CheckOut";
+import FullPageLoader from "@/component/FullPageLoader";
 
 
 const router = createBrowserRouter([
@@ -24,6 +26,23 @@ const router = createBrowserRouter([
         path: "login",
         Component: AuthModal,
       },
+      {
+        path: "cart",
+        Component: CheckOut,
+      },
+      {
+        path: "orders",
+        Component: FullPageLoader,
+      },
+      {
+        path: "about-us",
+        Component: FullPageLoader,
+      },
+      {
+        path: "terms",
+        Component: FullPageLoader,
+      },
+      
       {
         path: "category/:title",
         Component: Category,

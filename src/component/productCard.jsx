@@ -127,6 +127,12 @@ const ProductQuickAddDrawer = ({ product, open, onClose }) => {
     }, 2000); 
   };
 
+  const maxQty =
+  selectedVariant?.quantity ??
+  product?.quantity ??
+  1;
+
+
   return (
 <AnimatePresence>
   {open && (
@@ -242,7 +248,7 @@ const ProductQuickAddDrawer = ({ product, open, onClose }) => {
                           ${
                             active
                               ? "bg-gray-700 text-white shadow-lg"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:cursor-pointer"
                           }
                         `}
                       >
@@ -292,16 +298,18 @@ const ProductQuickAddDrawer = ({ product, open, onClose }) => {
             This item is already in your cart
           </div>
         )}
-
+         
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">
-            Quantity
-          </span>
+          {product?.variants?.length? null : <span className="text-sm font-medium text-gray-600">
+            Quantity: {product?.quantity}
+          </span> }
+          
 
           <div className="flex items-center gap-3 bg-gray-100 px-4 py-2 rounded-full">
             <button
+              disabled={qty === 1}
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="w-9 h-9 rounded-full bg-white shadow flex items-center justify-center"
+              className="disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer w-9 h-9 rounded-full bg-white shadow flex items-center justify-center"
             >
               <RiSubtractLine />
             </button>
@@ -311,8 +319,9 @@ const ProductQuickAddDrawer = ({ product, open, onClose }) => {
             </span>
 
             <button
+             disabled={qty === maxQty}
               onClick={() => setQty((q) => q + 1)}
-              className="w-9 h-9 rounded-full bg-white shadow flex items-center justify-center"
+              className="disabled:opacity-40 disabled:cursor-not-allowed w-9 h-9 rounded-full bg-white shadow flex items-center hover:cursor-pointer justify-center"
             >
               <RiAddLine />
             </button>
@@ -419,7 +428,7 @@ const ProductsCard = ({ product }) => {
       <button
         onClick={handleWishList}
         disabled={isPending}
-        className="absolute top-3 right-3 bg-white/90 backdrop-blur p-2 rounded-full shadow-md hover:scale-110 transition"
+        className="absolute top-3 right-3 bg-white/90 backdrop-blur p-2 rounded-full shadow-md hover:scale-110 transition hover:cursor-pointer"
       >
         <AnimatePresence mode="wait">
           {!iswishList ? (
@@ -483,7 +492,7 @@ const ProductsCard = ({ product }) => {
        <button
         onClick={() => setOpenDrawer(true)}
         disabled={isPending}
-        className="relative flex items-center justify-center w-11 h-11 rounded-full bg-blue-800/60 text-white hover:scale-105 transition disabled:opacity-60"
+        className="relative flex items-center justify-center w-11 h-11 rounded-full bg-blue-800/60 text-white hover:scale-105 transition disabled:opacity-60 hover:cursor-pointer"
       >
         <AnimatePresence mode="wait">
           {!isInCart ? (
